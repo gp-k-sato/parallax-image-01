@@ -6,7 +6,9 @@ export class ParallaxImage {
   constructor(element) {
     this.DOM = {};
     this.DOM.element = element;
-    this.DOM.img = this.DOM.element.querySelector('img');
+    this.DOM.image = this.DOM.element.children[0];
+
+    this.speed = parseFloat(this.DOM.element.dataset.parallaxSpeed) || 1.2;
 
     // 要素の読み込み完了後に処理
     // if (this.img.complete) {
@@ -22,16 +24,19 @@ export class ParallaxImage {
   }
 
   _setParallax() {
+    const heightPercentage = this.speed * 100;
+    this.DOM.image.style.height = `${heightPercentage}%`;
+
     const wrapperHeight = this.DOM.element.offsetHeight;
-    const imgHeight = this.DOM.img.offsetHeight;
+    const imageHeight = this.DOM.image.offsetHeight;
 
     // 親と画像の高さ差分で移動距離を設定
-    const moveY = imgHeight - wrapperHeight;
+    const moveY = imageHeight - wrapperHeight;
 
     if (moveY <= 0) return;
 
     gsap.fromTo(
-      this.DOM.img,
+      this.DOM.image,
       {
         y: 0
       },
