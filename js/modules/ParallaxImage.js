@@ -24,6 +24,7 @@ export class ParallaxImage {
   }
 
   _setParallax() {
+    // 画像の高さを設定
     const heightPercentage = this.speed * 100;
     this.DOM.image.style.height = `${heightPercentage}%`;
 
