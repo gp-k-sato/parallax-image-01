@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/parallax-image.css">
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
@@ -15,12 +16,11 @@
 </head>
 <body>
 
-  <div class="kv kv-grid">
+  <div class="kv">
     <div class="kv__body">
       <h1 class="kv__ttl">Parallax Image</h1>
-      <p class="kv__txt">スクロールに連動した枠内での画像パララックス</p>
     </div>
-    <div class="kv__img p-parallax-img js-parallax-img" data-parallax-speed="1.3">
+    <div class="kv__img p-parallax-img js-parallax-img" data-parallax-speed="1.4">
       <div class="p-parallax-img__item">
         <img src="images/img_03.jpg" alt="" decoding="async">
       </div>
@@ -28,25 +28,32 @@
   </div>
   
   <div class="grid">
-    <div class="p-parallax-img grid-img js-parallax-img" data-parallax-speed="1.3">
-      <div class="p-parallax-img__item">
-        <img src="images/img_01.jpg" alt="" decoding="async">
+    <div class="grid-item grid-item-01">
+      <div class="grid-img p-parallax-img js-parallax-img" data-parallax-speed="1.3">
+        <div class="p-parallax-img__item">
+          <img src="images/img_02.jpg" alt="" decoding="async">
+        </div>
       </div>
+      <p class="grid-item__caption">data-parallax-speed="1.3"</p>
     </div>
-    <div class="p-parallax-img grid-img js-parallax-img" data-parallax-speed="1.5">
-      <div class="p-parallax-img__item">
-        <img src="images/img_02.jpg" alt="" decoding="async">
+    <div class="grid-item grid-item-02">
+      <div class="grid-img p-parallax-img js-parallax-img" data-parallax-speed="1.6">
+        <div class="p-parallax-img__item">
+          <img src="images/img_02.jpg" alt="" decoding="async">
+        </div>
       </div>
+      <p class="grid-item__caption">data-parallax-speed="1.6"</p>
     </div>
-     <div class="p-parallax-img grid-img js-parallax-img" data-parallax-speed="1.3">
-      <div class="p-parallax-img__item">
-        <img src="images/img_03.jpg" alt="" decoding="async">
-      </div>
+    <div class="grid-item grid-item-03">
+      <p>GSAPとScrollTriggerを使用した、枠内での画像パララックスモジュール<br>
+      視差効果の大きさはdata-parallax-speed属性で指定が可能です。<br>
+      Lenis等の慣性スクロールとの併用が推奨</p>
     </div>
-    <div class="p-parallax-img grid-img js-parallax-img" data-parallax-speed="1.5">
-      <div class="p-parallax-img__item">
-        <img src="images/img_04.jpg" alt="" decoding="async">
-      </div>
+  </div>
+
+  <div class="wide p-parallax-img js-parallax-img" data-parallax-speed="1.8" style="height: 400px;">
+    <div class="p-parallax-img__item">
+      <img src="images/img_04.jpg" alt="" decoding="async">
     </div>
   </div>
 
