@@ -10,6 +10,9 @@ export class ParallaxImage {
 
     this.speed = parseFloat(this.DOM.element.dataset.parallaxSpeed) || 1.2;
 
+    this.resizeTimer = null;
+    this.prevWidth = window.innerWidth;
+
     // 要素の読み込み完了後に処理
     // if (this.img.complete) {
     //	 this._setParallax();
@@ -20,7 +23,7 @@ export class ParallaxImage {
     // }
 
     this._setParallax();
-
+    this._addEvent();
   }
 
   _setParallax() {
@@ -52,5 +55,29 @@ export class ParallaxImage {
         }
       }
     );
+  }
+
+  _handleResize() {
+    const currentWidth = window.innerWidth;
+    if (this.prevWidth !== currentWidth) {
+      this.prevWidth = currentWidth;
+      
+      ScrollTrigger.getAll().forEach(trigger => {
+        if (trigger.trigger === this.DOM.element) {
+          trigger.kill();
+        }
+      });
+
+      this._setParallax();
+    }
+  }
+
+  _addEvent() {
+    window.addEventListener('resize', () => {
+      clearTimeout(this.resizeTimer);
+      this.resizeTimer = setTimeout(() => {
+        this._handleResize();
+      }, 100);
+    });
   }
 }
