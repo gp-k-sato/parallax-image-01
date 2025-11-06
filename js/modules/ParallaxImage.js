@@ -27,25 +27,53 @@ export class ParallaxImage {
   }
 
   _setParallax() {
-    // 画像の高さを設定
-    const heightPercentage = this.speed * 100;
-    this.DOM.image.style.height = `${heightPercentage}%`;
-
     const wrapperHeight = this.DOM.element.offsetHeight;
-    const imageHeight = this.DOM.image.offsetHeight;
+    
+    // クラスをリセット
+    this.DOM.image.classList.remove('is-reverse-parallax', 'is-normal-parallax');
+    
+    let startY, endY, heightPercentage;
 
-    // 親と画像の高さ差分で移動距離を設定
-    const moveY = imageHeight - wrapperHeight;
-
-    if (moveY <= 0) return;
+    if (this.speed >= 1.0) {
+      // 1.0以上：通常のパララックス（上から下へ）
+      this.DOM.image.classList.add('is-normal-parallax');
+      heightPercentage = this.speed * 100;
+      this.DOM.image.style.height = `${heightPercentage}%`;
+      
+      const imageHeight = this.DOM.image.offsetHeight;
+      const moveY = imageHeight - wrapperHeight;
+      
+      if (moveY <= 0) return;
+      
+      startY = 0;
+      endY = -moveY;
+      
+    } else {
+      // 1.0未満：逆パララックス（下から上へ）
+      this.DOM.image.classList.add('is-reverse-parallax');
+      
+      // 0に近づくほど視差効果が強くなるように計算
+      // 1未満でも1以上と同程度の効果になるよう調整
+      const reverseSpeed = 1.0 - this.speed; // 1.0からの差分
+      
+      // 1以上の場合と同様の強度になるよう基準を調整
+      const effectiveSpeed = 1.0 + reverseSpeed; // 実効的なスピード
+      const maxMove = wrapperHeight * (effectiveSpeed - 1.0); // 1以上と同様の計算
+      
+      // 移動距離を考慮して画像の高さを設定
+      const requiredHeight = wrapperHeight + maxMove;
+      const heightPercentage = (requiredHeight / wrapperHeight) * 100;
+      this.DOM.image.style.height = `${heightPercentage}%`;
+      
+      startY = 0;
+      endY = maxMove; // 正の値で下方向
+    }
 
     gsap.fromTo(
       this.DOM.image,
+      { y: startY },
       {
-        y: 0
-      },
-      {
-        y: -moveY,
+        y: endY,
         ease: 'none',
         scrollTrigger: {
           trigger: this.DOM.element,

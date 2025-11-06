@@ -1,1 +1,1 @@
-.p-parallax-img{overflow:hidden;position:relative}.p-parallax-img__item{will-change:transform;position:absolute;top:0;left:0;width:100%;height:120%}.p-parallax-img__item img{width:100%;height:100%;object-fit:cover}
+.p-parallax-img{overflow:hidden;position:relative}.p-parallax-img__item{will-change:transform;position:absolute;left:0;width:100%}.p-parallax-img__item.is-normal-parallax{top:0}.p-parallax-img__item.is-reverse-parallax{bottom:0}.p-parallax-img__item img{width:100%;height:100%;object-fit:cover}
