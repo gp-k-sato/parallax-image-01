@@ -30,14 +30,18 @@
   --gap: 16px;
   --gap-sm: 8px;
   --font-en: "EB Garamond", serif;
-  // --font-en: "Playfair Display", serif;
   --font-ja: "Noto Sans JP", sans-serif;
+}
+
+html {
+  font-size: 10px;
 }
 
 body {
   color: #fff;
+  font-size: 1.5rem;
   font-family: var(--font-ja);
-  line-height: 1.7;
+  line-height: 1.8;
   background: #111;;
 }
 
@@ -78,57 +82,45 @@ body {
   }
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  grid-template-rows: repeat(8, 1fr);
-  grid-column-gap: var(--gap);
-  grid-row-gap: var(--gap);
-  width: 100%;
-  padding: calc(var(--gap) * 8);
-  @include smMin {
-    aspect-ratio: 1 / 1;
-  }
-  @include mdMax {
-    grid-column-gap: var(--gap-sm);
-    grid-row-gap: var(--gap-sm);
-    padding: calc(var(--gap-sm) * 4);
-    margin-bottom: 4vw;
-  }
-}
-
-.grid-item__caption {
-  font-size: 14px;
-  margin-top: 16px;
-  text-align: center;
-}
-
-.grid-item-01 {
-  grid-area: 3 / 5 / 6 / 7;
-  @include smMax {
-    grid-area: 2 / 1 / 6 / 5;
-  }
-}
-.grid-item-02 {
-  grid-area: 3 / 7 / 6 / 9;
-  @include smMax {
-    grid-area: 2 / 5 / 6 / 9;
-  }
-}
-.grid-item-03 {
-  grid-area: 3 / 1 / 6 / 5;
-  @include smMax {
-    // grid-area: 6 / 1 / 8 / 9;
-    grid-area: 7 / 1 / 9 / 9;
-  }
-}
-
-.grid-img {
-  height: 100%
-}
-
 .wide {
   width: 100%;
-  height: 300px;
+  height: max(30vw, 300px);
+}
+
+
+.detail {
+  padding: calc(var(--gap) * 16) calc(var(--gap) * 8) calc(var(--gap) * 24);
+  @include mdMax {
+    padding: calc(var(--gap-sm) * 4);
+    padding: calc(var(--gap-sm) * 16) calc(var(--gap-sm) * 4) calc(var(--gap-sm) * 24);
+  }
+}
+
+.detail__txts {
+  margin-bottom: calc(var(--gap) * 4);
+}
+
+.example {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-column-gap: var(--gap);
+  @include smMax {
+    grid-template-columns: repeat(2, 1fr);
+    grid-column-gap: var(--gap-sm);
+    grid-row-gap: var(--gap-sm);
+  }
+}
+
+.example__img {
+  height: 30vw;
+  @include smMax {
+    height: 65vw;
+  }
+}
+
+.example__caption {
+  font-size: 1.4rem;
+  margin: 1.6rem 0;
+  text-align: center;
 }
 
