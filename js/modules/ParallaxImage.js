@@ -8,7 +8,12 @@ export class ParallaxImage {
     this.DOM.element = element;
     this.DOM.image = this.DOM.element.children[0];
 
-    this.speed = parseFloat(this.DOM.element.dataset.parallaxSpeed) || 1.2;
+    // this.speed = parseFloat(this.DOM.element.dataset.parallaxSpeed) || 1.2;
+    const speedValue = this.DOM.element.dataset.parallaxSpeed;
+    this.speed = speedValue !== undefined && speedValue !== null && speedValue !== ''
+      ? parseFloat(speedValue)
+      : 1.2;
+
 
     this.resizeTimer = null;
     this.prevWidth = window.innerWidth;
@@ -28,14 +33,13 @@ export class ParallaxImage {
 
   _setParallax() {
     const wrapperHeight = this.DOM.element.offsetHeight;
-    
-    // クラスをリセット
+
     this.DOM.image.classList.remove('is-reverse-parallax', 'is-normal-parallax');
     
     let startY, endY, heightPercentage;
 
     if (this.speed >= 1.0) {
-      // 1.0以上：通常のパララックス（上から下へ）
+      // 1.0以上：通常のパララックス
       this.DOM.image.classList.add('is-normal-parallax');
       heightPercentage = this.speed * 100;
       this.DOM.image.style.height = `${heightPercentage}%`;
@@ -49,24 +53,21 @@ export class ParallaxImage {
       endY = -moveY;
       
     } else {
-      // 1.0未満：逆パララックス（下から上へ）
+      // 1.0未満：逆パララックス
       this.DOM.image.classList.add('is-reverse-parallax');
       
-      // 0に近づくほど視差効果が強くなるように計算
-      // 1未満でも1以上と同程度の効果になるよう調整
-      const reverseSpeed = 1.0 - this.speed; // 1.0からの差分
+      const mirrorSpeed = 2.0 - this.speed;
       
-      // 1以上の場合と同様の強度になるよう基準を調整
-      const effectiveSpeed = 1.0 + reverseSpeed; // 実効的なスピード
-      const maxMove = wrapperHeight * (effectiveSpeed - 1.0); // 1以上と同様の計算
-      
-      // 移動距離を考慮して画像の高さを設定
-      const requiredHeight = wrapperHeight + maxMove;
-      const heightPercentage = (requiredHeight / wrapperHeight) * 100;
+      const heightPercentage = mirrorSpeed * 100;
       this.DOM.image.style.height = `${heightPercentage}%`;
       
+      const imageHeight = this.DOM.image.offsetHeight;
+      const maxMove = imageHeight - wrapperHeight;
+      
+      if (maxMove <= 0) return;
+      
       startY = 0;
-      endY = maxMove; // 正の値で下方向
+      endY = maxMove;
     }
 
     gsap.fromTo(
