@@ -26,6 +26,7 @@ export class ParallaxImage {
 
     this.resizeTimer = null;
     this.prevWidth = window.innerWidth;
+    this.prevHeight = window.innerHeight;
 
     // 要素の読み込み完了後に処理
     // if (this.img.complete) {
@@ -40,10 +41,23 @@ export class ParallaxImage {
     this._addEvent();
   }
 
+  // User Agent モバイル判定
+  _isMobileUserAgent() {
+    return /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  }
+
+  // モバイル判定
+  _isMobileDevice() {
+    return window.innerWidth <= 767 || this._isMobileUserAgent();
+  }
+
+  // モバイル・タブレット判定
+  _isMobileOrTablet() {
+    return window.innerWidth <= 1024 || this._isMobileUserAgent();
+  }
+
   _setParallax() {
     const wrapperHeight = this.DOM.element.offsetHeight;
-
-    this.DOM.image.classList.remove('is-reverse-parallax', 'is-normal-parallax');
     
     let startY, endY;
 
@@ -63,8 +77,6 @@ export class ParallaxImage {
       
     } else {
       // 1.0以上：通常のパララックス
-      this.DOM.image.classList.add('is-normal-parallax');
-      
       const imageHeight = this.DOM.image.offsetHeight;
       const moveY = imageHeight - wrapperHeight;
       
@@ -74,7 +86,7 @@ export class ParallaxImage {
       endY = -moveY;
     }
 
-    const isMobile = window.innerWidth <= 767 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const isMobile = this._isMobileDevice();
 
     gsap.fromTo(
       this.DOM.image,
@@ -94,8 +106,33 @@ export class ParallaxImage {
 
   _handleResize() {
     const currentWidth = window.innerWidth;
-    if (this.prevWidth !== currentWidth) {
+    
+    if (this.prevWidth === currentWidth) {
+      if (this._isMobileOrTablet()) {
+        return;
+      }
+    }
+    
+    const currentHeight = window.innerHeight;
+    const isMobileOrTablet = this._isMobileOrTablet();
+    
+    let shouldResize = false;
+    
+    if (isMobileOrTablet) {
+      // SP・タブレット：横幅の変更のみに対応
+      if (this.prevWidth !== currentWidth) {
+        shouldResize = true;
+      }
+    } else {
+      // PC：横幅・縦幅両方の変更に対応
+      if (this.prevWidth !== currentWidth || this.prevHeight !== currentHeight) {
+        shouldResize = true;
+      }
+    }
+    
+    if (shouldResize) {
       this.prevWidth = currentWidth;
+      this.prevHeight = currentHeight;
       
       ScrollTrigger.getAll().forEach(trigger => {
         if (trigger.trigger === this.DOM.element) {
