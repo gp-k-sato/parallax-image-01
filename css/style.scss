@@ -1,3 +1,6 @@
+// ----------------------------------------------
+// モジュールの使用時には不要なCSSです
+// ----------------------------------------------
 
 @mixin smMin {
   @media screen and (min-width: 768px) {
@@ -52,9 +55,10 @@ body {
   grid-column-gap: var(--gap);
   grid-row-gap: var(--gap);
   width: 100%;
-  height: 100vh;
+  height: max(100vh, 800px);
   padding: calc(var(--gap) * 4);
   @include mdMax {
+    height: 100vh;
     grid-column-gap: var(--gap-sm);
     grid-row-gap: var(--gap-sm);
     padding: calc(var(--gap-sm) * 4);
@@ -79,12 +83,15 @@ body {
 .kv__img {
   img {
     object-position: center 20%;
+    // ファーストビューの画像はCSSで初期設定をしておく
+    height: 200%;
+    bottom: 0;
   }
 }
 
 .wide {
   width: 100%;
-  height: max(30vw, 300px);
+  height: max(35vw, 300px);
 }
 
 
