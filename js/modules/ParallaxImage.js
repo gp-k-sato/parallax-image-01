@@ -8,12 +8,21 @@ export class ParallaxImage {
     this.DOM.element = element;
     this.DOM.image = this.DOM.element.children[0];
 
-    // this.speed = parseFloat(this.DOM.element.dataset.parallaxSpeed) || 1.2;
+    // 速度設定
     const speedValue = this.DOM.element.dataset.parallaxSpeed;
     this.speed = speedValue !== undefined && speedValue !== null && speedValue !== ''
       ? parseFloat(speedValue)
       : 1.2;
 
+    // 視差効果の方向と大きさを事前計算
+    if (this.speed >= 1.0) {
+      this.heightPercentage = this.speed * 100;
+      this.isReverse = false;
+    } else {
+      this.mirrorSpeed = 2.0 - this.speed;
+      this.heightPercentage = this.mirrorSpeed * 100;
+      this.isReverse = true;
+    }
 
     this.resizeTimer = null;
     this.prevWidth = window.innerWidth;
@@ -36,13 +45,25 @@ export class ParallaxImage {
 
     this.DOM.image.classList.remove('is-reverse-parallax', 'is-normal-parallax');
     
-    let startY, endY, heightPercentage;
+    let startY, endY;
 
-    if (this.speed >= 1.0) {
+    this.DOM.image.style.height = `${this.heightPercentage}%`;
+
+    if (this.isReverse) {
+      // 1.0未満：逆パララックス
+      this.DOM.image.classList.add('is-reverse-parallax');
+      
+      const imageHeight = this.DOM.image.offsetHeight;
+      const moveY = imageHeight - wrapperHeight;
+      
+      if (moveY <= 0) return;
+      
+      startY = 0;
+      endY = moveY;
+      
+    } else {
       // 1.0以上：通常のパララックス
       this.DOM.image.classList.add('is-normal-parallax');
-      heightPercentage = this.speed * 100;
-      this.DOM.image.style.height = `${heightPercentage}%`;
       
       const imageHeight = this.DOM.image.offsetHeight;
       const moveY = imageHeight - wrapperHeight;
@@ -51,24 +72,9 @@ export class ParallaxImage {
       
       startY = 0;
       endY = -moveY;
-      
-    } else {
-      // 1.0未満：逆パララックス
-      this.DOM.image.classList.add('is-reverse-parallax');
-      
-      const mirrorSpeed = 2.0 - this.speed;
-      
-      const heightPercentage = mirrorSpeed * 100;
-      this.DOM.image.style.height = `${heightPercentage}%`;
-      
-      const imageHeight = this.DOM.image.offsetHeight;
-      const maxMove = imageHeight - wrapperHeight;
-      
-      if (maxMove <= 0) return;
-      
-      startY = 0;
-      endY = maxMove;
     }
+
+    const isMobile = window.innerWidth <= 767 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
     gsap.fromTo(
       this.DOM.image,
@@ -80,7 +86,7 @@ export class ParallaxImage {
           trigger: this.DOM.element,
           start: 'top bottom',
           end: 'bottom top',
-          scrub: true
+          scrub: isMobile ? 0.3 : true,
         }
       }
     );
